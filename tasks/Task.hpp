@@ -8,6 +8,7 @@
 #include <can_common/PGNMessage.hpp>
 #include <j1939/PGNs.hpp>
 #include <j1939/Receiver.hpp>
+#include <memory>
 #include <motors_yanmar_4lv150/Yanmar4LV150Status.hpp>
 
 namespace motors_yanmar_4lv150 {
@@ -18,7 +19,7 @@ namespace motors_yanmar_4lv150 {
     protected:
         Yanmar4LV150Status m_status;
         can_common::PGNLibrary m_library;
-        j1939::Receiver* m_receiver = nullptr;
+        std::unique_ptr<j1939::Receiver> m_receiver;
 
     public:
         Task(std::string const& name = "motors_yanmar_4lv150::Task");

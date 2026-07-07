@@ -21,7 +21,7 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
 
-    m_receiver = new j1939::Receiver(m_library);
+    m_receiver = std::make_unique<j1939::Receiver>(m_library);
     return true;
 }
 bool Task::startHook()
@@ -63,6 +63,4 @@ void Task::stopHook()
 void Task::cleanupHook()
 {
     TaskBase::cleanupHook();
-    delete m_receiver;
-    m_receiver = nullptr;
 }
