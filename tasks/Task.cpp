@@ -28,6 +28,7 @@ bool Task::startHook()
 {
     if (! TaskBase::startHook())
         return false;
+    m_status = Yanmar4LV150Status();
     return true;
 }
 void Task::updateHook()
