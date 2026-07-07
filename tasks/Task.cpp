@@ -1,7 +1,6 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
 #include "Task.hpp"
-#include <cstring>
 #include <motors_yanmar_4lv150/Helpers.hpp>
 
 using namespace motors_yanmar_4lv150;
