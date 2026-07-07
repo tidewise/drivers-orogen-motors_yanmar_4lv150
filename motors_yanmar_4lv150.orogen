@@ -13,6 +13,11 @@ import_types_from "motors_yanmar_4lv150/Yanmar4LV150Status.hpp"
 task_context "Task" do
     needs_configuration
 
+    # Source address to filter CAN messages.
+    #
+    # Messages with a different source address will be ignored
+    property("source_address", "/uint8_t")
+
     input_port("can_in", "/canbus/Message").
         needs_reliable_connection
 

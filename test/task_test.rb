@@ -13,6 +13,7 @@ describe OroGen.motors_yanmar_4lv150.Task do
             OroGen.motors_yanmar_4lv150.Task
                   .deployed_as("task_under_test")
         )
+        task.properties.source_address = 1
         syskit_configure_and_start(task)
     end
 
@@ -60,12 +61,21 @@ describe OroGen.motors_yanmar_4lv150.Task do
         assert_in_delta 130.0, alternator_sample.max_current, 1e-3
     end
 
-    def make_can_message(pgn, payload)
+    it "ignores messages from a different source address" do
+        # PGN 65271, source address 2 (configured is 1)
+        payload = [0x7D, 0x32, 0xF0, 0x00, 0xFA, 0x00, 0x2C, 0x01]
+        msg = make_can_message(0xFEF7, payload, 2)
+
+        expect_execution { syskit_write task.can_in_port, msg }
+            .to { have_no_new_sample(task.alternator_status_port) }
+    end
+
+    def make_can_message(pgn, payload, source = 1)
         msg = Types.canbus.Message.new
         msg.time = Time.now
         # NMEA2000 / J1939 CAN ID:
         # Priority (3 bits) | PGN (18 bits) | Source (8 bits)
-        msg.can_id = (3 << 26) | (pgn << 8) | 1
+        msg.can_id = (3 << 26) | (pgn << 8) | source
         msg.size = payload.size
         payload.each_with_index { |v, i| msg.data[i] = v }
         msg

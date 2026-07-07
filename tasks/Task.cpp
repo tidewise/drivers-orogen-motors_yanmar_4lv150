@@ -36,6 +36,10 @@ void Task::updateHook()
 
     canbus::Message can;
     while (_can_in.read(can) == RTT::NewData) {
+        if ((can.can_id & 0xFF) != static_cast<uint32_t>(_source_address.get())) {
+            continue;
+        }
+
         auto pgn_msg = can_common::PGNMessage::fromCAN(can);
         auto state = m_receiver->process(pgn_msg);
         if (state.first >= j1939::MessageState::COMPLETE) {
